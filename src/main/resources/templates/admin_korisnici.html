@@ -60,7 +60,7 @@
     </div>
 
     <div th:if="${param.uspjesno}" class="alert alert-success">
-        Uloga korisnika je uspjesno sacuvana.
+        Uloga korisnika je uspješno sačuvana.
     </div>
 
     <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-3">
@@ -94,7 +94,7 @@
                     th:attr="data-name=${korisnik.ime + ' ' + korisnik.prezime}, data-email=${korisnik.email}, data-role=${korisnik.uloga}">
                     <td class="ps-4">
                         <div class="fw-semibold" th:text="${korisnik.ime + ' ' + korisnik.prezime}">Ime Prezime</div>
-                        <div class="text-muted small">Korisnicki nalog</div>
+                        <div class="text-muted small">Korisnički nalog</div>
                     </td>
                     <td th:text="${korisnik.email}">email@primjer.com</td>
                     <td class="text-center">
@@ -110,7 +110,7 @@
                                     ROLE_USER
                                 </option>
                             </select>
-                            <button type="submit" class="btn btn-sm btn-accent px-4">Sacuvaj</button>
+                            <button type="submit" class="btn btn-sm btn-accent px-4">Sačuvaj</button>
                         </form>
                     </td>
                 </tr>

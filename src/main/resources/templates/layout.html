@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Naucni Radovi</title>
+    <title>Naučni Radovi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -157,7 +157,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
         <div class="brand-wrap">
-            <a class="brand-title" href="/">Naucni Radovi</a>
+            <a class="brand-title" href="/">Naučni Radovi</a>
             <span class="brand-admin" sec:authorize="hasRole('ADMIN')">Admin</span>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -197,12 +197,12 @@
 </nav>
 
 <div class="container content-shell" th:replace="${content}">
-    <p>Osnovni sadrzaj...</p>
+    <p>Osnovni sadržaj...</p>
 </div>
 
 <footer class="mt-auto py-3 text-white text-center" style="background: #0b1b2b;">
     <div class="container">
-        <small>&copy; 2026 Naucni Radovi - Projekat</small>
+        <small>&copy; 2026 Naučni Radovi - Projekat</small>
     </div>
 </footer>
 

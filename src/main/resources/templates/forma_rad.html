@@ -3,8 +3,8 @@
 <body>
 <div class="container">
     <div class="surface-card p-4 p-lg-5">
-        <h2 th:text="${naslovForme != null} ? ${naslovForme} : 'Objavi novi naucni rad'">Objavi novi naucni rad</h2>
-        <div class="text-muted">Popunite polja i sacuvajte rad u bazi.</div>
+        <h2 th:text="${naslovForme != null} ? ${naslovForme} : 'Objavi novi naucni rad'">Objavi novi naučni rad</h2>
+        <div class="text-muted">Popunite polja i sačuvajte rad u bazi.</div>
         <div class="section-separator my-4"></div>
 
         <form th:action="${akcija != null} ? ${akcija} : '/radovi/sacuvaj'" th:object="${rad}" method="post">
@@ -17,15 +17,15 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Kratak sazetak (Abstract)</label>
+                <label class="form-label">Kratak sažetak (Abstract)</label>
                 <textarea class="form-control" th:field="*{sazetak}" rows="3" required
                           th:classappend="${#fields.hasErrors('sazetak')} ? ' is-invalid' : ''"></textarea>
                 <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('sazetak')}" th:errors="*{sazetak}"></div>
-                <div class="form-text">Ukratko opisite o cemu se radi u vasem tekstu.</div>
+                <div class="form-text">Ukratko opišite o čemu se radi u vašem tekstu.</div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Kompletan sadrzaj</label>
+                <label class="form-label">Kompletan sadržaj</label>
                 <textarea class="form-control" th:field="*{sadrzaj}" rows="10" required
                           th:classappend="${#fields.hasErrors('sadrzaj')} ? ' is-invalid' : ''"></textarea>
                 <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('sadrzaj')}" th:errors="*{sadrzaj}"></div>
