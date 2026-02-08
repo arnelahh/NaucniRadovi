@@ -11,18 +11,24 @@
 
             <div class="mb-3">
                 <label class="form-label">Naslov rada</label>
-                <input type="text" class="form-control" th:field="*{naslov}" required>
+                <input type="text" class="form-control" th:field="*{naslov}" required
+                       th:classappend="${#fields.hasErrors('naslov')} ? ' is-invalid' : ''">
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('naslov')}" th:errors="*{naslov}"></div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Kratak sazetak (Abstract)</label>
-                <textarea class="form-control" th:field="*{sazetak}" rows="3" required></textarea>
+                <textarea class="form-control" th:field="*{sazetak}" rows="3" required
+                          th:classappend="${#fields.hasErrors('sazetak')} ? ' is-invalid' : ''"></textarea>
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('sazetak')}" th:errors="*{sazetak}"></div>
                 <div class="form-text">Ukratko opisite o cemu se radi u vasem tekstu.</div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Kompletan sadrzaj</label>
-                <textarea class="form-control" th:field="*{sadrzaj}" rows="10" required></textarea>
+                <textarea class="form-control" th:field="*{sadrzaj}" rows="10" required
+                          th:classappend="${#fields.hasErrors('sadrzaj')} ? ' is-invalid' : ''"></textarea>
+                <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('sadrzaj')}" th:errors="*{sadrzaj}"></div>
             </div>
 
             <div class="d-flex flex-wrap gap-2">

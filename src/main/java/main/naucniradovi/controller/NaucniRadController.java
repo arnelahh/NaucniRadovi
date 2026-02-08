@@ -3,6 +3,7 @@ package main.naucniradovi.controller;
 import main.naucniradovi.model.Komentar;
 import main.naucniradovi.model.Korisnik;
 import main.naucniradovi.model.NaucniRad;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import main.naucniradovi.service.KorisnikService;
 import main.naucniradovi.service.NaucniRadService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
 
 import java.security.Principal;
 import java.util.List;
@@ -59,7 +61,12 @@ public class NaucniRadController {
 
     // Čuvanje novog rada
     @PostMapping("/radovi/sacuvaj")
-    public String sacuvajRad(@ModelAttribute NaucniRad rad, Principal principal) {
+    public String sacuvajRad(@Valid @ModelAttribute("rad") NaucniRad rad,
+                             BindingResult bindingResult,
+                             Principal principal) {
+        if (bindingResult.hasErrors()) {
+            return "forma_rad";
+        }
         // Principal sadrži email ulogovanog korisnika
         String email = principal.getName();
         Korisnik autor = korisnikService.nadjiPoEmailu(email).get();
@@ -117,10 +124,21 @@ public class NaucniRadController {
     }
 
     @PostMapping("/radovi/azuriraj/{id}")
-    public String azurirajRad(@PathVariable Long id, @ModelAttribute NaucniRad formRad, Principal principal) {
+    public String azurirajRad(@PathVariable Long id,
+                              @Valid @ModelAttribute("rad") NaucniRad formRad,
+                              BindingResult bindingResult,
+                              Principal principal,
+                              Model model) {
         NaucniRad postojeci = naucniRadService.nadjiRadPoIdu(id);
         if (!mozeUreditiRad(postojeci, principal)) {
             return "redirect:/radovi/pregled/" + id;
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("editMode", true);
+            model.addAttribute("akcija", "/radovi/azuriraj/" + id);
+            model.addAttribute("naslovForme", "Uredi naucni rad");
+            model.addAttribute("dugmeTekst", "Sacuvaj izmjene");
+            return "forma_rad";
         }
         postojeci.setNaslov(formRad.getNaslov());
         postojeci.setSazetak(formRad.getSazetak());

@@ -123,48 +123,47 @@
         <div sec:authorize="isAnonymous()" class="alert alert-warning mt-4">
             Morate biti <a href="/login">prijavljeni</a> da biste ostavili komentar.
         </div>
-    </div>
-</div>
-
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Potvrda brisanja</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
-            </div>
-            <div class="modal-body">
-                Da li ste sigurni da zelite obrisati ovaj <span id="deleteLabel">sadrzaj</span>?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Odustani</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Obrisi</button>
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Potvrda brisanja</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+                    </div>
+                    <div class="modal-body">
+                        Da li ste sigurni da zelite obrisati ovaj <span id="deleteLabel">sadrzaj</span>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Odustani</button>
+                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Obrisi</button>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <script>
+            const confirmDeleteModal = document.getElementById("confirmDeleteModal");
+            const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+            const deleteLabel = document.getElementById("deleteLabel");
+            let currentDeleteFormId = null;
+
+            confirmDeleteModal.addEventListener("show.bs.modal", (event) => {
+                const button = event.relatedTarget;
+                currentDeleteFormId = button.getAttribute("data-delete-form");
+                deleteLabel.textContent = button.getAttribute("data-delete-label") || "sadrzaj";
+            });
+
+            confirmDeleteBtn.addEventListener("click", () => {
+                if (!currentDeleteFormId) {
+                    return;
+                }
+                const form = document.getElementById(currentDeleteFormId);
+                if (form) {
+                    form.submit();
+                }
+            });
+        </script>
     </div>
 </div>
-
-<script>
-    const confirmDeleteModal = document.getElementById("confirmDeleteModal");
-    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
-    const deleteLabel = document.getElementById("deleteLabel");
-    let currentDeleteFormId = null;
-
-    confirmDeleteModal.addEventListener("show.bs.modal", (event) => {
-        const button = event.relatedTarget;
-        currentDeleteFormId = button.getAttribute("data-delete-form");
-        deleteLabel.textContent = button.getAttribute("data-delete-label") || "sadrzaj";
-    });
-
-    confirmDeleteBtn.addEventListener("click", () => {
-        if (!currentDeleteFormId) {
-            return;
-        }
-        const form = document.getElementById(currentDeleteFormId);
-        if (form) {
-            form.submit();
-        }
-    });
-</script>
 </body>
 </html>

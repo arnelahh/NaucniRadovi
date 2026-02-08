@@ -1,7 +1,7 @@
 # NaucniRadovi - dokumentacija
 
 ## Sta je projekat
-NaucniRadovi je web aplikacija za objavu, pretragu i pregled naucnih radova. Korisnici mogu da se registruju, objave radove, komentarisu tudje radove i upravljaju sopstvenim sadrzajem. Administratori imaju dodatne privilegije za upravljanje ulogama korisnika i moderaciju.
+NaucniRadovi je web aplikacija za objavu, pretragu i pregled naucnih radova. Korisnici mogu da se registruju, objave radove, komentarisu tudje radove i upravljaju sopstvenim sadrzajem. Administratori imaju dodatne privilegije za upravljanje ulogama korisnika.
 
 ## Zasto postoji
 Cilj je centralizovana i pregledna baza naucnih radova sa osnovnom kolaboracijom (komentari) i jasnom kontrolom pristupa (ulogovani korisnici i admin uloga).
@@ -46,7 +46,7 @@ Cilj je centralizovana i pregledna baza naucnih radova sa osnovnom kolaboracijom
 - Komentari na radove (dodavanje, uredjivanje, brisanje).
 - Admin panel za promjenu uloga korisnika.
 - Profil korisnika sa listom radova i komentara.
-- Potvrda brisanja kroz modal + kratke UI notifikacije nakon akcija.
+- Potvrda brisanja kroz modal + notifikacije nakon sacuvanja rada i promjene uloge.
 
 ## Model podataka (entiteti)
 - `Korisnik`
@@ -106,3 +106,4 @@ Konfiguracija je u `src/main/resources/application.properties`:
 - Sadrzaj rada je tekst (nema upload fajlova).
 - Nema paginacije ni naprednog filtriranja.
 - Validacija je definisana na entitetima (polja ne smiju biti prazna).
+- Brisanje rada se poziva preko GET rute iz detalja rada.
