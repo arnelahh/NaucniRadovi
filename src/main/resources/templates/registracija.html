@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
+<body>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow mt-5">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>Registracija</h4>
+            </div>
+            <div class="card-body p-4">
+
+                <form th:action="@{/registracija}" th:object="${korisnik}" method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label">Ime</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{ime}"
+                               th:classappend="${#fields.hasErrors('ime')} ? 'is-invalid' : ''"
+                               placeholder="Unesite ime">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('ime')}" th:errors="*{ime}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Prezime</label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{prezime}"
+                               th:classappend="${#fields.hasErrors('prezime')} ? 'is-invalid' : ''"
+                               placeholder="Unesite prezime">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('prezime')}" th:errors="*{prezime}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email adresa</label>
+                        <input type="email"
+                               class="form-control"
+                               th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                               placeholder="email@primjer.com">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Lozinka</label>
+                        <input type="password"
+                               class="form-control"
+                               th:field="*{lozinka}"
+                               th:classappend="${#fields.hasErrors('lozinka')} ? 'is-invalid' : ''"
+                               placeholder="Lozinka (min. 6 znakova)">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('lozinka')}" th:errors="*{lozinka}"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Registruj se</button>
+                </form>
+            </div>
+            <div class="card-footer text-center bg-light">
+                Već imate nalog? <a href="/login" class="text-decoration-none fw-bold">Prijavite se</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

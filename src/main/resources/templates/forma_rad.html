@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
+<body>
+<div class="container">
+    <h2>Objavi novi naučni rad</h2>
+    <hr>
+
+    <form th:action="@{/radovi/sacuvaj}" th:object="${rad}" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Naslov rada</label>
+            <input type="text" class="form-control" th:field="*{naslov}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kratak sažetak (Abstract)</label>
+            <textarea class="form-control" th:field="*{sazetak}" rows="3" required></textarea>
+            <div class="form-text">Ukratko opišite o čemu se radi u vašem tekstu.</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kompletan sadržaj</label>
+            <textarea class="form-control" th:field="*{sadrzaj}" rows="10" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Objavi rad</button>
+        <a href="/" class="btn btn-secondary">Odustani</a>
+    </form>
+</div>
+</body>
+</html>

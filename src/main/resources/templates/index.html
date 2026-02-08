@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
+<body>
+<div>
+    <div class="p-5 mb-4 bg-white rounded-3 shadow-sm">
+        <div class="container-fluid py-2">
+            <h1 class="display-5 fw-bold">Dobrodošli u bazu znanja</h1>
+            <p class="col-md-8 fs-4">Pronađite inspiraciju u radovima naših kolega.</p>
+
+            <form action="/" method="get" class="d-flex mt-4">
+                <input class="form-control me-2" type="search" name="pretraga" placeholder="Pretraži radove po naslovu ili autoru...">
+                <button class="btn btn-primary" type="submit">Traži</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h3>Najnoviji radovi</h3>
+        </div>
+
+        <div th:if="${radovi.empty}" class="alert alert-info">
+            Trenutno nema objavljenih radova. Budite prvi!
+        </div>
+
+        <div class="col-md-6 mb-4" th:each="rad : ${radovi}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary" th:text="${rad.naslov}">Naslov rada</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Autor: <span th:text="${rad.autor.ime + ' ' + rad.autor.prezime}">Ime</span>
+                    </h6>
+                    <p class="card-text" th:text="${rad.sazetak}">Kratak opis rada...</p>
+                </div>
+                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
+                    <small class="text-muted" th:text="${#temporals.format(rad.datumObjave, 'dd.MM.yyyy HH:mm')}">Datum</small>
+                    <a th:href="@{/radovi/pregled/{id}(id=${rad.id})}" class="btn btn-outline-primary btn-sm">Pročitaj više</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
