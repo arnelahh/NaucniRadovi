@@ -31,6 +31,10 @@ public class KomentarService {
         return komentarRepository.findByRad(rad);
     }
 
+    public List<Komentar> komentariAutora(Korisnik autor) {
+        return komentarRepository.findByAutor(autor);
+    }
+
     public Komentar nadjiKomentar(Long id) {
         return komentarRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Komentar sa ID " + id + " nije pronađen!"));

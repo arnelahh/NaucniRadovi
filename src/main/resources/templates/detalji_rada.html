@@ -5,7 +5,11 @@
 <body>
 <div class="container">
 
-    <div class="bg-white p-4 rounded shadow-sm mb-4">
+    <div class="surface-card p-4 p-lg-5 mb-4">
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+            <span class="status-badge author">Autor</span>
+            <span class="status-badge admin" th:if="${rad.autor.uloga == 'ROLE_ADMIN'}">Admin</span>
+        </div>
         <h1 th:text="${rad.naslov}" class="mb-3">Naslov</h1>
         <div class="text-muted mb-4">
             Autor: <strong th:text="${rad.autor.ime + ' ' + rad.autor.prezime}">Autor</strong> |
@@ -16,8 +20,9 @@
             <strong>Sazetak:</strong> <span th:text="${rad.sazetak}"></span>
         </div>
 
-        <hr>
-        <div class="card card-body bg-light">
+        <div class="section-separator my-4"></div>
+
+        <div class="surface-card p-3 p-lg-4" style="background: #f8fafc;">
             <p th:text="${rad.sadrzaj}" style="white-space: pre-wrap;">Tekst rada...</p>
         </div>
 
@@ -26,19 +31,40 @@
             <a th:href="@{/radovi/uredi/{id}(id=${rad.id})}" class="btn btn-outline-primary">
                 Uredi rad
             </a>
-            <a th:href="@{/radovi/obrisi/{id}(id=${rad.id})}"
-               class="btn btn-danger"
-               onclick="return confirm('Da li ste sigurni da zelite obrisati ovaj rad?');">
-                Obrisi rad
-            </a>
+            <form th:action="@{/radovi/obrisi/{id}(id=${rad.id})}" method="get" id="deleteRadForm">
+                <button type="button"
+                        class="btn btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#confirmDeleteModal"
+                        data-delete-form="deleteRadForm"
+                        data-delete-label="rad">
+                    Obrisi rad
+                </button>
+            </form>
         </div>
     </div>
 
+    <div class="section-separator my-4"></div>
+
     <div class="mt-5">
-        <h3>Komentari</h3>
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <h3 class="mb-0">Komentari</h3>
+            <span class="status-badge info" th:if="${!komentari.empty}">Komentarisan</span>
+        </div>
+
+        <div th:if="${komentari.empty}" class="empty-state mb-4">
+            <div class="empty-icon">?</div>
+            <h5 class="mb-2">Jos nema komentara</h5>
+            <p class="text-muted mb-3">Budite prvi koji ostavlja komentar na ovaj rad.</p>
+            <a class="btn btn-accent" href="#komentarForma">Dodaj komentar</a>
+        </div>
 
         <div th:each="komentar : ${komentari}" class="card mb-3">
             <div class="card-body">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <span class="status-badge author" th:if="${komentar.autor.email == rad.autor.email}">Autor</span>
+                    <span class="status-badge admin" th:if="${komentar.autor.uloga == 'ROLE_ADMIN'}">Admin</span>
+                </div>
                 <p class="card-text" th:text="${komentar.tekst}">Tekst komentara</p>
 
                 <div class="d-flex justify-content-between align-items-end">
@@ -56,9 +82,12 @@
                             Uredi
                         </button>
 
-                        <form th:action="@{/komentari/obrisi/{id}(id=${komentar.id})}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('Sigurno zelite obrisati komentar?')">
+                        <form th:action="@{/komentari/obrisi/{id}(id=${komentar.id})}" method="post" style="display:inline;"
+                              th:id="'deleteKomentarForm' + ${komentar.id}">
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteModal"
+                                    th:attr="data-delete-form=${'deleteKomentarForm' + komentar.id}, data-delete-label='komentar'">
                                 Obrisi
                             </button>
                         </form>
@@ -79,7 +108,7 @@
             </div>
         </div>
 
-        <div sec:authorize="isAuthenticated()" class="card bg-light mt-4">
+        <div sec:authorize="isAuthenticated()" class="card bg-light mt-4" id="komentarForma">
             <div class="card-body">
                 <h5>Ostavite komentar</h5>
                 <form th:action="@{/radovi/{id}/komentar(id=${rad.id})}" method="post">
@@ -96,5 +125,46 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Potvrda brisanja</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+            </div>
+            <div class="modal-body">
+                Da li ste sigurni da zelite obrisati ovaj <span id="deleteLabel">sadrzaj</span>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Odustani</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Obrisi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const confirmDeleteModal = document.getElementById("confirmDeleteModal");
+    const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+    const deleteLabel = document.getElementById("deleteLabel");
+    let currentDeleteFormId = null;
+
+    confirmDeleteModal.addEventListener("show.bs.modal", (event) => {
+        const button = event.relatedTarget;
+        currentDeleteFormId = button.getAttribute("data-delete-form");
+        deleteLabel.textContent = button.getAttribute("data-delete-label") || "sadrzaj";
+    });
+
+    confirmDeleteBtn.addEventListener("click", () => {
+        if (!currentDeleteFormId) {
+            return;
+        }
+        const form = document.getElementById(currentDeleteFormId);
+        if (form) {
+            form.submit();
+        }
+    });
+</script>
 </body>
 </html>

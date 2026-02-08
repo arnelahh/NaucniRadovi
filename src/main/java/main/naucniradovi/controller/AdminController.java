@@ -28,7 +28,7 @@ public class AdminController {
     @PostMapping("/admin/korisnici/{id}/uloga")
     public String promijeniUlogu(@PathVariable Long id, @RequestParam String uloga) {
         korisnikService.promijeniUlogu(id, uloga);
-        return "redirect:/admin/korisnici";
+        return "redirect:/admin/korisnici?uspjesno=1";
     }
 
     @GetMapping("/admin_korisnici")

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
+<body>
+<div class="container">
+    <div class="surface-card p-4 p-lg-5 mb-4">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+            <div>
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <span class="status-badge admin" th:if="${korisnik.uloga == 'ROLE_ADMIN'}">Admin</span>
+                    <span class="status-badge author" th:if="${korisnik.uloga != 'ROLE_ADMIN'}">Korisnik</span>
+                </div>
+                <h2 class="mb-1" th:text="${korisnik.ime + ' ' + korisnik.prezime}">Korisnik</h2>
+                <div class="text-muted" th:text="${korisnik.email}">email@primjer.com</div>
+            </div>
+            <div class="d-flex gap-3">
+                <div class="text-center">
+                    <div class="fw-semibold" th:text="${#lists.size(radovi)}">0</div>
+                    <div class="text-muted small">Radovi</div>
+                </div>
+                <div class="text-center">
+                    <div class="fw-semibold" th:text="${#lists.size(komentari)}">0</div>
+                    <div class="text-muted small">Komentari</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-separator my-4"></div>
+
+    <div class="mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h3 class="mb-1">Moji radovi</h3>
+                <div class="text-muted">Pregled svih radova koje ste objavili.</div>
+            </div>
+            <a href="/radovi/novi" class="btn btn-accent btn-sm">+ Novi rad</a>
+        </div>
+
+        <div th:if="${radovi.empty}" class="empty-state">
+            <div class="empty-icon">+</div>
+            <h5 class="mb-2">Nema objavljenih radova</h5>
+            <p class="text-muted mb-3">Objavite prvi rad i popunite svoj profil.</p>
+            <a href="/radovi/novi" class="btn btn-accent">Objavi rad</a>
+        </div>
+
+        <div class="row g-4" th:if="${!radovi.empty}">
+            <div class="col-lg-6" th:each="rad : ${radovi}">
+                <div class="surface-card h-100 p-4">
+                    <div class="status-badge author mb-2">Rad</div>
+                    <h5 class="mb-2" th:text="${rad.naslov}">Naslov rada</h5>
+                    <p class="text-muted mb-3" th:text="${rad.sazetak}">Sazetak...</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <small class="text-muted" th:text="${#temporals.format(rad.datumObjave, 'dd.MM.yyyy HH:mm')}">Datum</small>
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/radovi/pregled/{id}(id=${rad.id})}">Detalji</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-separator my-4"></div>
+
+    <div class="mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div>
+                <h3 class="mb-1">Moji komentari</h3>
+                <div class="text-muted">Vasi posljednji komentari na radovima.</div>
+            </div>
+        </div>
+
+        <div th:if="${komentari.empty}" class="empty-state">
+            <div class="empty-icon">?</div>
+            <h5 class="mb-2">Nema komentara</h5>
+            <p class="text-muted mb-3">Komentarisite radove i gradite diskusiju.</p>
+            <a href="/" class="btn btn-accent">Pogledaj radove</a>
+        </div>
+
+        <div class="row g-4" th:if="${!komentari.empty}">
+            <div class="col-lg-6" th:each="komentar : ${komentari}">
+                <div class="surface-card h-100 p-4">
+                    <div class="text-muted small mb-2">
+                        Rad: <span th:text="${komentar.rad.naslov}">Naslov rada</span>
+                    </div>
+                    <p th:text="${#strings.abbreviate(komentar.tekst, 140)}">Tekst komentara</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <small class="text-muted" th:text="${#temporals.format(komentar.datumKreiranja, 'dd.MM.yyyy HH:mm')}">Datum</small>
+                        <a class="btn btn-outline-dark btn-sm" th:href="@{/radovi/pregled/{id}(id=${komentar.rad.id})}">Otvori rad</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

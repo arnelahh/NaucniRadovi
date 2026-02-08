@@ -2,31 +2,107 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
 <body>
 <div class="container">
-    <div class="d-flex align-items-center justify-content-between mb-4">
+    <style>
+        .admin-header {
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.12), rgba(245, 158, 11, 0.12));
+            padding: 1.5rem 1.75rem;
+        }
+        .admin-title {
+            font-size: 1.9rem;
+        }
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(15, 118, 110, 0.12);
+            color: #0b6a62;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .admin-card {
+            border-radius: 18px;
+            border: 1px solid rgba(11, 27, 43, 0.08);
+            box-shadow: 0 12px 30px rgba(11, 27, 43, 0.08);
+        }
+        .admin-table thead th {
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.75rem;
+            color: #516072;
+            border-bottom: 1px solid rgba(11, 27, 43, 0.1);
+        }
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 110px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(11, 27, 43, 0.06);
+            color: #0b1b2b;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+    </style>
+
+    <div class="admin-header d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
         <div>
-            <h2 class="mb-1">Admin panel</h2>
-            <div class="text-muted">Upravljanje ulogama korisnika.</div>
+            <div class="admin-badge">Administracija</div>
+            <h2 class="admin-title mb-1">Admin panel</h2>
+            <div class="text-muted">Upravljanje ulogama korisnika na jednom mjestu.</div>
+        </div>
+        <div class="text-muted small">
+            Ukupno korisnika: <span th:text="${#lists.size(korisnici)}">0</span>
         </div>
     </div>
 
-    <div class="card p-3 p-lg-4">
+    <div th:if="${param.uspjesno}" class="alert alert-success">
+        Uloga korisnika je uspjesno sacuvana.
+    </div>
+
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Pretraga</span>
+            <input id="adminSearch" type="search" class="form-control" placeholder="Ime, prezime ili email">
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="text-muted small">Sortiraj:</span>
+            <select id="adminSort" class="form-select form-select-sm">
+                <option value="default">Default</option>
+                <option value="admin">Admin prvo</option>
+                <option value="user">User prvo</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card admin-card p-0">
         <div class="table-responsive">
-            <table class="table align-middle">
+            <table class="table admin-table align-middle mb-0">
                 <thead>
                 <tr>
-                    <th>Ime</th>
+                    <th class="ps-4">Korisnik</th>
                     <th>Email</th>
-                    <th>Uloga</th>
-                    <th>Akcija</th>
+                    <th class="text-center">Uloga</th>
+                    <th class="text-center pe-4">Akcija</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="korisnik : ${korisnici}">
-                    <td th:text="${korisnik.ime + ' ' + korisnik.prezime}">Ime Prezime</td>
+                <tr th:each="korisnik : ${korisnici}"
+                    th:attr="data-name=${korisnik.ime + ' ' + korisnik.prezime}, data-email=${korisnik.email}, data-role=${korisnik.uloga}">
+                    <td class="ps-4">
+                        <div class="fw-semibold" th:text="${korisnik.ime + ' ' + korisnik.prezime}">Ime Prezime</div>
+                        <div class="text-muted small">Korisnicki nalog</div>
+                    </td>
                     <td th:text="${korisnik.email}">email@primjer.com</td>
-                    <td>
-                        <form th:action="@{/admin/korisnici/{id}/uloga(id=${korisnik.id})}" method="post" class="d-flex gap-2">
-                            <select class="form-select form-select-sm" name="uloga">
+                    <td class="text-center">
+                        <span class="role-pill" th:text="${korisnik.uloga}">ROLE_USER</span>
+                    </td>
+                    <td class="text-center pe-4">
+                        <form th:action="@{/admin/korisnici/{id}/uloga(id=${korisnik.id})}" method="post" class="d-flex flex-column align-items-center gap-2">
+                            <select class="form-select form-select-sm w-100" name="uloga">
                                 <option th:each="uloga : ${uloge}"
                                         th:value="${uloga}"
                                         th:selected="${uloga == korisnik.uloga}"
@@ -34,15 +110,55 @@
                                     ROLE_USER
                                 </option>
                             </select>
-                            <button type="submit" class="btn btn-sm btn-accent">Sacuvaj</button>
+                            <button type="submit" class="btn btn-sm btn-accent px-4">Sacuvaj</button>
                         </form>
                     </td>
-                    <td class="text-muted">-</td>
+                </tr>
+                <tr id="adminNoResults" class="d-none">
+                    <td colspan="4" class="text-center text-muted py-4">Nema rezultata za zadatu pretragu.</td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+        const adminSearch = document.getElementById("adminSearch");
+        const adminSort = document.getElementById("adminSort");
+        const adminTableBody = document.querySelector(".admin-table tbody");
+        const adminRows = Array.from(adminTableBody.querySelectorAll("tr")).filter(row => row.id !== "adminNoResults");
+        const adminNoResults = document.getElementById("adminNoResults");
+
+        const applyAdminFilterSort = () => {
+            const query = adminSearch.value.trim().toLowerCase();
+            const sortMode = adminSort.value;
+            const filtered = adminRows.filter(row => {
+                const name = (row.dataset.name || "").toLowerCase();
+                const email = (row.dataset.email || "").toLowerCase();
+                return name.includes(query) || email.includes(query);
+            });
+
+            filtered.sort((a, b) => {
+                if (sortMode === "admin") {
+                    return (a.dataset.role === "ROLE_ADMIN" ? -1 : 1) - (b.dataset.role === "ROLE_ADMIN" ? -1 : 1);
+                }
+                if (sortMode === "user") {
+                    return (a.dataset.role === "ROLE_USER" ? -1 : 1) - (b.dataset.role === "ROLE_USER" ? -1 : 1);
+                }
+                return 0;
+            });
+
+            adminTableBody.innerHTML = "";
+            filtered.forEach(row => adminTableBody.appendChild(row));
+            adminNoResults.classList.toggle("d-none", filtered.length > 0);
+            if (filtered.length === 0) {
+                adminTableBody.appendChild(adminNoResults);
+            }
+        };
+
+        adminSearch.addEventListener("input", applyAdminFilterSort);
+        adminSort.addEventListener("change", applyAdminFilterSort);
+    </script>
 </div>
 </body>
 </html>

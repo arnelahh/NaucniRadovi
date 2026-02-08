@@ -17,6 +17,11 @@
             --accent-2: #f59e0b;
             --card: #ffffff;
             --surface: #eef5f4;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --shadow-soft: 0 8px 24px rgba(11, 27, 43, 0.08);
+            --shadow-strong: 0 16px 36px rgba(11, 27, 43, 0.12);
+            --border-subtle: 1px solid rgba(11, 27, 43, 0.08);
         }
         body {
             font-family: "Space Grotesk", sans-serif;
@@ -25,9 +30,22 @@
                 radial-gradient(1200px 600px at 10% -20%, #d7f2ea 0%, transparent 60%),
                 radial-gradient(1000px 500px at 90% -30%, #ffe7c2 0%, transparent 55%),
                 var(--surface);
+            line-height: 1.65;
+            font-size: 16px;
         }
         h1, h2, h3, .brand-title {
             font-family: "Fraunces", serif;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+        h1 {
+            font-size: clamp(2rem, 2.6vw, 2.8rem);
+        }
+        h2 {
+            font-size: clamp(1.6rem, 2.1vw, 2.2rem);
+        }
+        h3 {
+            font-size: clamp(1.3rem, 1.6vw, 1.7rem);
         }
         .navbar {
             background: rgba(11, 27, 43, 0.9);
@@ -69,12 +87,68 @@
             font-weight: 600;
         }
         .card {
-            border: none;
-            border-radius: 18px;
+            border: var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            background: var(--card);
+        }
+        .card-elevated {
+            box-shadow: var(--shadow-strong);
+        }
+        .surface-card {
+            border-radius: var(--radius-lg);
+            border: var(--border-subtle);
+            background: var(--card);
+            box-shadow: var(--shadow-soft);
         }
         .content-shell {
             margin-top: 2rem;
             margin-bottom: 2.5rem;
+        }
+        .section-separator {
+            height: 1px;
+            background: linear-gradient(90deg, rgba(11, 27, 43, 0), rgba(11, 27, 43, 0.15), rgba(11, 27, 43, 0));
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .status-badge.admin {
+            background: rgba(245, 158, 11, 0.18);
+            color: #8a5200;
+        }
+        .status-badge.author {
+            background: rgba(15, 118, 110, 0.14);
+            color: #0b6a62;
+        }
+        .status-badge.info {
+            background: rgba(11, 27, 43, 0.08);
+            color: var(--ink);
+        }
+        .empty-state {
+            border-radius: var(--radius-lg);
+            border: 1px dashed rgba(11, 27, 43, 0.2);
+            background: rgba(255, 255, 255, 0.6);
+            padding: 2rem;
+            text-align: center;
+        }
+        .empty-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(15, 118, 110, 0.12);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b6a62;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
         }
     </style>
 </head>
@@ -90,13 +164,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav align-items-lg-center ms-auto">
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link active" href="/admin/korisnici">Admin</a>
+                    <a class="btn btn-admin me-2" href="/admin/korisnici">Admin panel</a>
                 </li>
-            </ul>
-
-            <ul class="navbar-nav align-items-lg-center">
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a class="nav-link" href="/login">Prijava</a>
                 </li>
@@ -106,6 +177,9 @@
 
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="btn btn-accent me-2" href="/radovi/novi">+ Objavi rad</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/profil">Moj profil</a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <span class="navbar-text text-white px-3 text-center">

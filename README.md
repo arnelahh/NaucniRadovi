@@ -6,6 +6,10 @@ NaucniRadovi je web aplikacija za objavu, pretragu i pregled naucnih radova. Kor
 ## Zasto postoji
 Cilj je centralizovana i pregledna baza naucnih radova sa osnovnom kolaboracijom (komentari) i jasnom kontrolom pristupa (ulogovani korisnici i admin uloga).
 
+## Pristupni podaci (admin)
+- Email: `admin@admin.ba`
+- Lozinka: `admin`
+
 ## Kako radi (tehnologije i arhitektura)
 - Backend: Spring Boot 4, Spring MVC, Spring Data JPA, Spring Security.
 - Frontend: Thymeleaf templating + Bootstrap 5.
@@ -24,6 +28,7 @@ Cilj je centralizovana i pregledna baza naucnih radova sa osnovnom kolaboracijom
   - `KomentarController`: uredjivanje i brisanje komentara.
   - `AuthController`: registracija i login.
   - `AdminController`: administracija uloga.
+  - `ProfilController`: pregled profila (radovi i komentari).
 - `src/main/java/main/naucniradovi/service/`
   - `NaucniRadService`, `KomentarService`, `KorisnikService`: poslovna logika.
   - `CustomUserDetailsService`: integracija sa Spring Security.
@@ -37,9 +42,11 @@ Cilj je centralizovana i pregledna baza naucnih radova sa osnovnom kolaboracijom
 ## Glavne funkcionalnosti
 - Registracija i prijava korisnika.
 - Objavljivanje, uredjivanje i brisanje naucnih radova (autor ili admin).
-- Pretraga po naslovu ili imenu autora.
+- Pretraga po naslovu ili imenu autora + sortiranje liste.
 - Komentari na radove (dodavanje, uredjivanje, brisanje).
 - Admin panel za promjenu uloga korisnika.
+- Profil korisnika sa listom radova i komentara.
+- Potvrda brisanja kroz modal + kratke UI notifikacije nakon akcija.
 
 ## Model podataka (entiteti)
 - `Korisnik`
@@ -58,12 +65,10 @@ Cilj je centralizovana i pregledna baza naucnih radova sa osnovnom kolaboracijom
   - Javne rute: `/`, `/login`, `/registracija` i staticki resursi.
   - Autentifikacija: potrebna za objavu/izmjenu/brisanje radova i komentara.
   - Admin rute: `/admin/**`.
-- Seed admin nalog (ako ne postoji):
-  - Email: `admin@admin.ba`
-  - Lozinka: `admin`
 
 ## HTTP rute (glavne)
 - `/` - pocetna + pretraga.
+- `/profil` - profil korisnika.
 - `/radovi/novi` - forma za novi rad.
 - `/radovi/sacuvaj` - cuvanje novog rada (POST).
 - `/radovi/pregled/{id}` - detalji rada.
@@ -82,6 +87,7 @@ Cilj je centralizovana i pregledna baza naucnih radova sa osnovnom kolaboracijom
 - `forma_rad.html`: objava/izmjena rada.
 - `login.html`, `registracija.html`: auth UI.
 - `admin_korisnici.html`: admin upravljanje ulogama.
+- `profil.html`: profil korisnika (radovi + komentari).
 
 ## Konfiguracija baze
 Konfiguracija je u `src/main/resources/application.properties`:

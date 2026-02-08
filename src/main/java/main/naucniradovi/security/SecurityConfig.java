@@ -19,7 +19,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/registracija", "/login", "/css/**", "/js/**").permitAll() // Ovo je javno
                         .requestMatchers("/admin/**", "/admin_korisnici").hasRole("ADMIN")
-                        .requestMatchers("/radovi/novi", "/radovi/sacuvaj", "/radovi/obrisi/**", "/radovi/uredi/**", "/radovi/azuriraj/**").authenticated() // Ovo zahtijeva login
+                        .requestMatchers("/radovi/novi", "/radovi/sacuvaj", "/radovi/obrisi/**", "/radovi/uredi/**", "/radovi/azuriraj/**", "/profil").authenticated() // Ovo zahtijeva login
                         .requestMatchers("/radovi/*/komentar", "/komentari/**").authenticated()
                         .anyRequest().permitAll() // Sve ostalo je dozvoljeno (za sad, radi lakšeg testiranja)
                 )

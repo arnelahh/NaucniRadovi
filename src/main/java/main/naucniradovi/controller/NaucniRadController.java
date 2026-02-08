@@ -29,7 +29,9 @@ public class NaucniRadController {
 
     // Početna stranica - lista svih radova + pretraga
     @GetMapping("/")
-    public String pocetna(@RequestParam(required = false) String pretraga, Model model) {
+    public String pocetna(@RequestParam(required = false) String pretraga,
+                          @RequestParam(required = false) String sort,
+                          Model model) {
         List<NaucniRad> radovi;
 
         if (pretraga != null && !pretraga.isEmpty()) {
@@ -39,9 +41,11 @@ public class NaucniRadController {
             radovi = naucniRadService.sviRadovi();
         }
 
+        radovi = naucniRadService.sortirajRadove(radovi, sort);
         model.addAttribute("radovi", radovi);
-        // Ako želiš da tekst ostane upisan u search baru nakon pretrage:
+        // Ako Å¾eliÅ¡ da tekst ostane upisan u search baru nakon pretrage:
         model.addAttribute("pretraga", pretraga);
+        model.addAttribute("sort", sort);
 
         return "index";
     }
@@ -63,7 +67,7 @@ public class NaucniRadController {
         rad.setAutor(autor);
         naucniRadService.sacuvajRad(rad);
 
-        return "redirect:/";
+        return "redirect:/?radSacuvan=1";
     }
 
     // Pregled detalja rada
@@ -145,3 +149,6 @@ public class NaucniRadController {
     }
 
 }
+
+
+
