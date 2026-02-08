@@ -13,7 +13,7 @@
         </div>
 
         <div class="alert alert-secondary">
-            <strong>Sažetak:</strong> <span th:text="${rad.sazetak}"></span>
+            <strong>Sazetak:</strong> <span th:text="${rad.sazetak}"></span>
         </div>
 
         <hr>
@@ -21,12 +21,15 @@
             <p th:text="${rad.sadrzaj}" style="white-space: pre-wrap;">Tekst rada...</p>
         </div>
 
-        <div class="mt-3" sec:authorize="isAuthenticated()"
-             th:if="${#authentication.name == rad.autor.email}">
+        <div class="mt-3 d-flex justify-content-end gap-2 flex-wrap" sec:authorize="isAuthenticated()"
+             th:if="${#authorization.expression('hasRole(''ADMIN'')') or #authentication.name == rad.autor.email}">
+            <a th:href="@{/radovi/uredi/{id}(id=${rad.id})}" class="btn btn-outline-primary">
+                Uredi rad
+            </a>
             <a th:href="@{/radovi/obrisi/{id}(id=${rad.id})}"
                class="btn btn-danger"
-               onclick="return confirm('Da li ste sigurni da želite obrisati ovaj rad?');">
-                Obriši rad
+               onclick="return confirm('Da li ste sigurni da zelite obrisati ovaj rad?');">
+                Obrisi rad
             </a>
         </div>
     </div>
@@ -45,7 +48,7 @@
                     </footer>
 
                     <div sec:authorize="isAuthenticated()"
-                         th:if="${#authentication.name == komentar.autor.email}">
+                         th:if="${#authorization.expression('hasRole(''ADMIN'')') or #authentication.name == komentar.autor.email}">
 
                         <button class="btn btn-sm btn-outline-secondary" type="button"
                                 data-bs-toggle="collapse"
@@ -55,8 +58,8 @@
 
                         <form th:action="@{/komentari/obrisi/{id}(id=${komentar.id})}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('Sigurno želite obrisati komentar?')">
-                                Obriši
+                                    onclick="return confirm('Sigurno zelite obrisati komentar?')">
+                                Obrisi
                             </button>
                         </form>
                     </div>
@@ -68,7 +71,7 @@
                             <div class="mb-2">
                                 <textarea name="noviTekst" class="form-control" rows="2" th:text="${komentar.tekst}"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-sm btn-success">Sačuvaj izmjene</button>
+                            <button type="submit" class="btn btn-sm btn-success">Sacuvaj izmjene</button>
                         </form>
                     </div>
                 </div>
@@ -81,9 +84,9 @@
                 <h5>Ostavite komentar</h5>
                 <form th:action="@{/radovi/{id}/komentar(id=${rad.id})}" method="post">
                     <div class="mb-3">
-                        <textarea name="tekst" class="form-control" rows="3" placeholder="Napišite vaše mišljenje..." required></textarea>
+                        <textarea name="tekst" class="form-control" rows="3" placeholder="Napisite vase misljenje..." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Pošalji komentar</button>
+                    <button type="submit" class="btn btn-primary">Posalji komentar</button>
                 </form>
             </div>
         </div>

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import main.naucniradovi.service.KomentarService;
 import main.naucniradovi.service.KorisnikService;
 import main.naucniradovi.service.NaucniRadService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.security.Principal;
 import java.util.List;
@@ -75,7 +77,11 @@ public class NaucniRadController {
 
     // Brisanje rada
     @GetMapping("/radovi/obrisi/{id}")
-    public String obrisiRad(@PathVariable Long id) {
+    public String obrisiRad(@PathVariable Long id, Principal principal) {
+        NaucniRad rad = naucniRadService.nadjiRadPoIdu(id);
+        if (!mozeUreditiRad(rad, principal)) {
+            return "redirect:/radovi/pregled/" + id;
+        }
         naucniRadService.obrisiRad(id);
         return "redirect:/";
     }
@@ -90,6 +96,52 @@ public class NaucniRadController {
         komentarService.dodajKomentar(tekst, rad, autor);
 
         return "redirect:/radovi/pregled/" + id;
+    }
+
+    @GetMapping("/radovi/uredi/{id}")
+    public String urediRad(@PathVariable Long id, Model model, Principal principal) {
+        NaucniRad rad = naucniRadService.nadjiRadPoIdu(id);
+        if (!mozeUreditiRad(rad, principal)) {
+            return "redirect:/radovi/pregled/" + id;
+        }
+        model.addAttribute("rad", rad);
+        model.addAttribute("editMode", true);
+        model.addAttribute("akcija", "/radovi/azuriraj/" + id);
+        model.addAttribute("naslovForme", "Uredi naucni rad");
+        model.addAttribute("dugmeTekst", "Sacuvaj izmjene");
+        return "forma_rad";
+    }
+
+    @PostMapping("/radovi/azuriraj/{id}")
+    public String azurirajRad(@PathVariable Long id, @ModelAttribute NaucniRad formRad, Principal principal) {
+        NaucniRad postojeci = naucniRadService.nadjiRadPoIdu(id);
+        if (!mozeUreditiRad(postojeci, principal)) {
+            return "redirect:/radovi/pregled/" + id;
+        }
+        postojeci.setNaslov(formRad.getNaslov());
+        postojeci.setSazetak(formRad.getSazetak());
+        postojeci.setSadrzaj(formRad.getSadrzaj());
+        naucniRadService.sacuvajRad(postojeci);
+        return "redirect:/radovi/pregled/" + id;
+    }
+
+    private boolean mozeUreditiRad(NaucniRad rad, Principal principal) {
+        if (principal == null) {
+            return false;
+        }
+        if (isAdmin()) {
+            return true;
+        }
+        return rad.getAutor().getEmail().equals(principal.getName());
+    }
+
+    private boolean isAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return false;
+        }
+        return auth.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 
 }

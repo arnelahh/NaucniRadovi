@@ -2,6 +2,8 @@ package main.naucniradovi.controller;
 
 import main.naucniradovi.model.Komentar;
 import main.naucniradovi.service.KomentarService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +25,8 @@ public class KomentarController {
         Komentar k = komentarService.nadjiKomentar(id);
         String emailUlogovanog = principal.getName();
 
-        // Provjera: Da li je onaj ko briše isti onaj ko je napisao komentar?
-        if (k.getAutor().getEmail().equals(emailUlogovanog)) {
+        // Provjera: Da li je onaj ko brise isti onaj ko je napisao komentar?
+        if (k.getAutor().getEmail().equals(emailUlogovanog) || isAdmin()) {
             komentarService.obrisiKomentar(id);
         }
 
@@ -39,12 +41,21 @@ public class KomentarController {
         Komentar k = komentarService.nadjiKomentar(id);
         String emailUlogovanog = principal.getName();
 
-        if (k.getAutor().getEmail().equals(emailUlogovanog)) {
+        if (k.getAutor().getEmail().equals(emailUlogovanog) || isAdmin()) {
             komentarService.izmjeniKomentar(id, noviTekst);
 
         } else {
-            System.out.println("Pokušaj izmjene tuđeg komentara od strane: " + emailUlogovanog);
+            System.out.println("Pokusaj izmjene tudjeg komentara od strane: " + emailUlogovanog);
         }
         return "redirect:/radovi/pregled/" + k.getRad().getId();
+    }
+
+    private boolean isAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null) {
+            return false;
+        }
+        return auth.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 }

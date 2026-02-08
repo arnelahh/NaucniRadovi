@@ -1,40 +1,108 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::div})}">
 <body>
-<div>
-    <div class="p-5 mb-4 bg-white rounded-3 shadow-sm">
-        <div class="container-fluid py-2">
-            <h1 class="display-5 fw-bold">Dobrodošli u bazu znanja</h1>
-            <p class="col-md-8 fs-4">Pronađite inspiraciju u radovima naših kolega.</p>
+<div class="home-wrap">
+    <style>
+        .home-wrap {
+            padding: 2rem 0.75rem 3.5rem;
+        }
+        .hero-panel {
+            background: linear-gradient(135deg, #0f766e 0%, #115e59 50%, #0b3d3a 100%);
+            border-radius: 24px;
+            color: #f8fafc;
+            position: relative;
+            overflow: hidden;
+            padding: 3rem;
+        }
+        .hero-panel::after {
+            content: "";
+            position: absolute;
+            right: -80px;
+            top: -120px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.25), transparent 70%);
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.85rem;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+            font-size: 0.9rem;
+            letter-spacing: 0.02em;
+        }
+        .search-shell {
+            background: #fff;
+            border-radius: 16px;
+            padding: 0.35rem;
+            max-width: 640px;
+        }
+        .search-shell input {
+            border: none;
+        }
+        .search-shell input:focus {
+            box-shadow: none;
+        }
+        @media (max-width: 768px) {
+            .hero-panel {
+                padding: 2rem;
+            }
+            .home-wrap {
+                padding: 1.5rem 0.5rem 3rem;
+            }
+        }
+        .paper-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        }
+        .paper-card .badge {
+            background: #e0f2f1;
+            color: #0f766e;
+        }
+    </style>
 
-            <form action="/" method="get" class="d-flex mt-4">
-                <input class="form-control me-2" type="search" name="pretraga" placeholder="Pretraži radove po naslovu ili autoru...">
-                <button class="btn btn-primary" type="submit">Traži</button>
+    <div class="hero-panel mb-5">
+        <div class="hero-badge mb-3">Zajednica istrazivaca</div>
+        <h1 class="display-5 fw-bold">Baza naucnih radova, brzo i pregledno</h1>
+        <p class="lead mb-4">Pretrazuj naslove, upoznaj autore i prati najnovije objave u jednom prostoru.</p>
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
+            <form action="/" method="get" class="search-shell d-flex align-items-center gap-2 flex-grow-1">
+                <input class="form-control" type="search" name="pretraga" placeholder="Pretrazi radove po naslovu ili autoru..." th:value="${pretraga}">
+                <button class="btn btn-accent px-4" type="submit">Trazi</button>
             </form>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12 mb-3">
-            <h3>Najnoviji radovi</h3>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <h3 class="mb-1">Najnoviji radovi</h3>
+            <div class="text-muted">Odaberi rad i otvori detalje u jednom kliku.</div>
         </div>
+    </div>
 
-        <div th:if="${radovi.empty}" class="alert alert-info">
-            Trenutno nema objavljenih radova. Budite prvi!
-        </div>
+    <div th:if="${radovi.empty}" class="alert alert-info">
+        Trenutno nema objavljenih radova. Budite prvi!
+    </div>
 
-        <div class="col-md-6 mb-4" th:each="rad : ${radovi}">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-primary" th:text="${rad.naslov}">Naslov rada</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">
+    <div class="row g-4" th:if="${!radovi.empty}">
+        <div class="col-lg-6" th:each="rad : ${radovi}">
+            <div class="paper-card h-100 p-4 d-flex flex-column justify-content-between">
+                <div>
+                    <div class="badge mb-2">Rad</div>
+                    <h5 class="mb-2" th:text="${rad.naslov}">Naslov rada</h5>
+                    <div class="text-muted mb-3">
                         Autor: <span th:text="${rad.autor.ime + ' ' + rad.autor.prezime}">Ime</span>
-                    </h6>
-                    <p class="card-text" th:text="${rad.sazetak}">Kratak opis rada...</p>
+                    </div>
+                    <p class="text-muted" th:text="${rad.sazetak}">Kratak opis rada...</p>
                 </div>
-                <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center mt-3">
                     <small class="text-muted" th:text="${#temporals.format(rad.datumObjave, 'dd.MM.yyyy HH:mm')}">Datum</small>
-                    <a th:href="@{/radovi/pregled/{id}(id=${rad.id})}" class="btn btn-outline-primary btn-sm">Pročitaj više</a>
+                    <a th:href="@{/radovi/pregled/{id}(id=${rad.id})}" class="btn btn-outline-dark btn-sm">Procitaj vise</a>
                 </div>
             </div>
         </div>

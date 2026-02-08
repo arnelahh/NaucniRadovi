@@ -2,10 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
 <body>
 <div class="container">
-    <h2>Objavi novi naučni rad</h2>
+    <h2 th:text="${naslovForme != null} ? ${naslovForme} : 'Objavi novi naucni rad'">Objavi novi naucni rad</h2>
     <hr>
 
-    <form th:action="@{/radovi/sacuvaj}" th:object="${rad}" method="post">
+    <form th:action="${akcija != null} ? ${akcija} : '/radovi/sacuvaj'" th:object="${rad}" method="post">
 
         <div class="mb-3">
             <label class="form-label">Naslov rada</label>
@@ -13,17 +13,17 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Kratak sažetak (Abstract)</label>
+            <label class="form-label">Kratak sazetak (Abstract)</label>
             <textarea class="form-control" th:field="*{sazetak}" rows="3" required></textarea>
-            <div class="form-text">Ukratko opišite o čemu se radi u vašem tekstu.</div>
+            <div class="form-text">Ukratko opisite o cemu se radi u vasem tekstu.</div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Kompletan sadržaj</label>
+            <label class="form-label">Kompletan sadrzaj</label>
             <textarea class="form-control" th:field="*{sadrzaj}" rows="10" required></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary">Objavi rad</button>
+        <button type="submit" class="btn btn-primary" th:text="${dugmeTekst != null} ? ${dugmeTekst} : 'Objavi rad'">Objavi rad</button>
         <a href="/" class="btn btn-secondary">Odustani</a>
     </form>
 </div>

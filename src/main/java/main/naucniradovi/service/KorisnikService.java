@@ -50,4 +50,17 @@ public class KorisnikService {
     public List<Korisnik> sviKorisnici() {
         return korisnikRepository.findAll();
     }
+
+    public void promijeniUlogu(Long id, String uloga) {
+        if (uloga == null || uloga.isBlank()) {
+            throw new RuntimeException("Uloga ne moze biti prazna.");
+        }
+        if (!uloga.equals("ROLE_USER") && !uloga.equals("ROLE_ADMIN")) {
+            throw new RuntimeException("Nepoznata uloga: " + uloga);
+        }
+        Korisnik korisnik = korisnikRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Korisnik nije pronadjen: " + id));
+        korisnik.setUloga(uloga);
+        korisnikRepository.save(korisnik);
+    }
 }

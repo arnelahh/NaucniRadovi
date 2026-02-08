@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::div})}">
+<body>
+<div class="container">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h2 class="mb-1">Admin panel</h2>
+            <div class="text-muted">Upravljanje ulogama korisnika.</div>
+        </div>
+    </div>
+
+    <div class="card p-3 p-lg-4">
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                <tr>
+                    <th>Ime</th>
+                    <th>Email</th>
+                    <th>Uloga</th>
+                    <th>Akcija</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="korisnik : ${korisnici}">
+                    <td th:text="${korisnik.ime + ' ' + korisnik.prezime}">Ime Prezime</td>
+                    <td th:text="${korisnik.email}">email@primjer.com</td>
+                    <td>
+                        <form th:action="@{/admin/korisnici/{id}/uloga(id=${korisnik.id})}" method="post" class="d-flex gap-2">
+                            <select class="form-select form-select-sm" name="uloga">
+                                <option th:each="uloga : ${uloge}"
+                                        th:value="${uloga}"
+                                        th:selected="${uloga == korisnik.uloga}"
+                                        th:text="${uloga}">
+                                    ROLE_USER
+                                </option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-accent">Sacuvaj</button>
+                        </form>
+                    </td>
+                    <td class="text-muted">-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
