@@ -91,16 +91,10 @@ Konfiguracija je u `src/main/resources/application.properties`:
 - `spring.jpa.hibernate.ddl-auto=update`
 
 ## Pokretanje lokalno
-1) Instaliraj MySQL i napravi bazu:
-   - `CREATE DATABASE naucni_radovi_db;`
-2) Provjeri podatke u `application.properties`.
-3) Pokreni aplikaciju:
-   - Windows: `mvnw.cmd spring-boot:run`
-   - Linux/macOS: `./mvnw spring-boot:run`
-4) Otvori: `http://localhost:8080`
-
-## Testiranje
-- `mvnw.cmd test` (Windows) ili `./mvnw test` (Linux/macOS)
+1) Pokrenuti MySQL Workbench i napraviti bazu `naucni_radovi_db`.
+2) Provjeriti u `src/main/resources/application.properties` da se `spring.datasource.username` i `spring.datasource.password` slazu sa podacima baze u Workbench-u.
+3) Pokrenuti aplikaciju iz IntelliJ-a preko `NaucniRadoviApplication`.
+4) U browseru otvoriti `http://localhost:8080` (8080 je port).
 
 ## Napomene i ogranicenja
 - Sadrzaj rada je tekst (nema upload fajlova).
