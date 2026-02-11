@@ -18,31 +18,21 @@ public class AuthController {
     public AuthController(KorisnikService korisnikService) {
         this.korisnikService = korisnikService;
     }
-
-    // Prikaz forme za login
     @GetMapping("/login")
     public String login() {
-        return "login"; // Tražit će login.html
+        return "login";
     }
-
-    // Prikaz forme za registraciju
     @GetMapping("/registracija")
     public String prikaziRegistraciju(Model model) {
         model.addAttribute("korisnik", new Korisnik());
-        return "registracija"; // Tražit će registracija.html
+        return "registracija";
     }
-
-    // Obrada registracije
     @PostMapping("/registracija")
     public String registrujKorisnika(@Valid @ModelAttribute("korisnik") Korisnik korisnik, BindingResult result, Model model) {
-
-        // OVO JE NOVO: Ispis u konzolu da vidimo šta se dešava
         System.out.println("--- PRIMIO SAM ZAHTJEV ZA REGISTRACIJU ---");
         System.out.println("Ime: " + korisnik.getIme());
         System.out.println("Email: " + korisnik.getEmail());
         System.out.println("Lozinka: " + korisnik.getLozinka());
-
-        // Ako ima grešaka u validaciji (npr. prazno ime)
         if (result.hasErrors()) {
             return "registracija";
         }
@@ -50,10 +40,11 @@ public class AuthController {
         try {
             korisnikService.registrujKorisnika(korisnik);
         } catch (RuntimeException e) {
-            model.addAttribute("greska", e.getMessage()); // Npr. "Email već postoji"
+            model.addAttribute("greska", e.getMessage());
             return "registracija";
         }
 
-        return "redirect:/login?uspjesno"; // Prebaci na login nakon uspjeha
+        return "redirect:/login?uspjesno";
     }
 }
+

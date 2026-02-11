@@ -27,17 +27,17 @@ public class NaucniRad {
     private String naslov;
 
     @NotBlank(message = "Sažetak je obavezan")
-    @Column(columnDefinition = "TEXT") // Omogućava unos dužeg teksta
+    @Column(columnDefinition = "TEXT")
     private String sazetak;
 
     @NotBlank(message = "Sadržaj rada je obavezan")
     @Column(columnDefinition = "TEXT")
-    private String sadrzaj; // Tekst rada ili link do fajla
+    private String sadrzaj;
 
-    @CreationTimestamp // Automatski upisuje trenutno vrijeme
+    @CreationTimestamp
     private LocalDateTime datumObjave;
 
-    @ManyToOne(fetch = FetchType.EAGER) // EAGER znači da odmah učita i podatke o autoru
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "autor_id", nullable = false)
     private Korisnik autor;
 
@@ -45,3 +45,4 @@ public class NaucniRad {
     @JsonIgnore
     private List<Komentar> komentari = new ArrayList<>();
 }
+

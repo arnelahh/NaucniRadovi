@@ -28,8 +28,6 @@ public class NaucniRadController {
         this.korisnikService = korisnikService;
         this.komentarService = komentarService;
     }
-
-    // Početna stranica - lista svih radova + pretraga
     @GetMapping("/")
     public String pocetna(@RequestParam(required = false) String pretraga,
                           @RequestParam(required = false) String sort,
@@ -37,7 +35,6 @@ public class NaucniRadController {
         List<NaucniRad> radovi;
 
         if (pretraga != null && !pretraga.isEmpty()) {
-            // Pozivamo novu pametnu pretragu (traži i po naslovu i po autoru)
             radovi = naucniRadService.univerzalnaPretraga(pretraga);
         } else {
             radovi = naucniRadService.sviRadovi();
@@ -45,21 +42,16 @@ public class NaucniRadController {
 
         radovi = naucniRadService.sortirajRadove(radovi, sort);
         model.addAttribute("radovi", radovi);
-        // Ako Å¾eliÅ¡ da tekst ostane upisan u search baru nakon pretrage:
         model.addAttribute("pretraga", pretraga);
         model.addAttribute("sort", sort);
 
         return "index";
     }
-
-    // Forma za novi rad
     @GetMapping("/radovi/novi")
     public String noviRadForma(Model model) {
         model.addAttribute("rad", new NaucniRad());
-        return "forma_rad"; // Tražit će forma_rad.html
+        return "forma_rad";
     }
-
-    // Čuvanje novog rada
     @PostMapping("/radovi/sacuvaj")
     public String sacuvajRad(@Valid @ModelAttribute("rad") NaucniRad rad,
                              BindingResult bindingResult,
@@ -67,7 +59,6 @@ public class NaucniRadController {
         if (bindingResult.hasErrors()) {
             return "forma_rad";
         }
-        // Principal sadrži email ulogovanog korisnika
         String email = principal.getName();
         Korisnik autor = korisnikService.nadjiPoEmailu(email).get();
 
@@ -76,17 +67,13 @@ public class NaucniRadController {
 
         return "redirect:/?radSacuvan=1";
     }
-
-    // Pregled detalja rada
     @GetMapping("/radovi/pregled/{id}")
     public String pregledRada(@PathVariable Long id, Model model) {
         NaucniRad rad = naucniRadService.nadjiRadPoIdu(id);
         model.addAttribute("rad", rad);
         model.addAttribute("komentari", komentarService.komentariZaRad(rad));
-        return "detalji_rada"; // Tražit će detalji_rada.html
+        return "detalji_rada";
     }
-
-    // Brisanje rada
     @GetMapping("/radovi/obrisi/{id}")
     public String obrisiRad(@PathVariable Long id, Principal principal) {
         NaucniRad rad = naucniRadService.nadjiRadPoIdu(id);
@@ -96,8 +83,6 @@ public class NaucniRadController {
         naucniRadService.obrisiRad(id);
         return "redirect:/";
     }
-
-    // Dodavanje komentara (direktno na stranici detalja)
     @PostMapping("/radovi/{id}/komentar")
     public String dodajKomentar(@PathVariable Long id, @RequestParam String tekst, Principal principal) {
         NaucniRad rad = naucniRadService.nadjiRadPoIdu(id);
@@ -167,6 +152,7 @@ public class NaucniRadController {
     }
 
 }
+
 
 
 

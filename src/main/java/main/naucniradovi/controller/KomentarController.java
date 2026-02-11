@@ -24,8 +24,6 @@ public class KomentarController {
     public String obrisi(@PathVariable Long id, Principal principal) {
         Komentar k = komentarService.nadjiKomentar(id);
         String emailUlogovanog = principal.getName();
-
-        // Provjera: Da li je onaj ko brise isti onaj ko je napisao komentar?
         if (k.getAutor().getEmail().equals(emailUlogovanog) || isAdmin()) {
             komentarService.obrisiKomentar(id);
         }
@@ -59,3 +57,4 @@ public class KomentarController {
                 .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 }
+

@@ -42,9 +42,8 @@ public class Korisnik {
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<NaucniRad> radovi = new ArrayList<>();
-
-    // Relacija 1:N (Jedan korisnik može napisati više komentara)
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Komentar> komentari = new ArrayList<>();
 }
+

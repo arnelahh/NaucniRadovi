@@ -17,15 +17,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/registracija", "/login", "/css/**", "/js/**").permitAll() // Ovo je javno
+                        .requestMatchers("/", "/registracija", "/login", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/admin/**", "/admin_korisnici").hasRole("ADMIN")
-                        .requestMatchers("/radovi/novi", "/radovi/sacuvaj", "/radovi/obrisi/**", "/radovi/uredi/**", "/radovi/azuriraj/**", "/profil").authenticated() // Ovo zahtijeva login
+                        .requestMatchers("/radovi/novi", "/radovi/sacuvaj", "/radovi/obrisi/**", "/radovi/uredi/**", "/radovi/azuriraj/**", "/profil").authenticated()
                         .requestMatchers("/radovi/*/komentar", "/komentari/**").authenticated()
-                        .anyRequest().permitAll() // Sve ostalo je dozvoljeno (za sad, radi lakšeg testiranja)
+                        .anyRequest().permitAll()
                 )
                 .formLogin((form) -> form
-                        .loginPage("/login") // Naša custom login stranica (napravit ćemo je u HTML-u)
-                        .defaultSuccessUrl("/", true) // Gdje ideš kad se uspješno loguješ
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout((logout) -> logout.permitAll());

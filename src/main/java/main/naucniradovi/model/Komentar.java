@@ -19,8 +19,8 @@ public class Komentar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Komentar ne mo≈æe biti prazan")
-    @Size(max = 500, message = "Komentar ne smije biti du≈æi od 500 karaktera")
+    @NotBlank(message = "Komentar ne moûe biti prazan")
+    @Size(max = 500, message = "Komentar ne smije biti duûi od 500 karaktera")
     private String tekst;
 
     @CreationTimestamp

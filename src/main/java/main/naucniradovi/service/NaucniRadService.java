@@ -37,14 +37,14 @@ public class NaucniRadService {
 
     public List<NaucniRad> nadjiPoNaslovu(String naslov) {
         if (naslov == null || naslov.isEmpty()) {
-            return naucniRadRepository.findAll(); // Ako korisnik ne ukuca ništa, vrati sve
+            return naucniRadRepository.findAll();
         }
         return naucniRadRepository.findByNaslovContainingIgnoreCase(naslov);
     }
 
     public List<NaucniRad> pretragaPoAutoru(String imeAutora) {
         if (imeAutora == null || imeAutora.trim().isEmpty()) {
-            return naucniRadRepository.findAll(); // Ako ništa ne upiše, vrati sve
+            return naucniRadRepository.findAll();
         }
         return naucniRadRepository.findByAutorImeContainingIgnoreCase(imeAutora);
     }
@@ -53,7 +53,6 @@ public class NaucniRadService {
         if (pojam == null || pojam.isEmpty()) {
             return naucniRadRepository.findAll();
         }
-        // Šaljemo isti pojam dvaput: "traži ovaj tekst u naslovu ILI u autoru"
         return naucniRadRepository.findByNaslovContainingIgnoreCaseOrAutorImeContainingIgnoreCase(pojam, pojam);
     }
 
@@ -94,3 +93,4 @@ public class NaucniRadService {
         return sortirani;
     }
 }
+

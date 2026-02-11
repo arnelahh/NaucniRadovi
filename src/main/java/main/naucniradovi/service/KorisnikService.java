@@ -17,11 +17,9 @@ public class KorisnikService {
         this.korisnikRepository = korisnikRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
-    // Metoda za registraciju
     public void registrujKorisnika(Korisnik k) {
-        System.out.println("--- SERVIS: Počinje registracija za: " + k.getEmail()); // <--- NOVO
-        // Provjeri postoji li već email
+        System.out.println("--- SERVIS: Počinje registracija za: " + k.getEmail());
+
         if (korisnikRepository.findByEmail(k.getEmail()).isPresent()) {
             throw new RuntimeException("Korisnik sa ovim emailom već postoji!");
         }
@@ -30,15 +28,14 @@ public class KorisnikService {
             k.setUloga("ROLE_USER");
             System.out.println("--- SERVIS: Postavljena default uloga: ROLE_USER");
         }
-        // Šifriraj lozinku prije čuvanja
         k.setLozinka(passwordEncoder.encode(k.getLozinka()));
         System.out.println("--- SERVIS: Lozinka šifrirana.");
 
         try {
             Korisnik spasen = korisnikRepository.save(k);
-            System.out.println("--- SERVIS: USPJESNO SPAŠEN! ID: " + spasen.getId()); // <--- KLJUČNO
+            System.out.println("--- SERVIS: USPJESNO SPAŠEN! ID: " + spasen.getId());
         } catch (Exception e) {
-            System.out.println("--- SERVIS: GREŠKA KOD SPAŠAVANJA U BAZU: " + e.getMessage()); // <--- NOVO
+            System.out.println("--- SERVIS: GREŠKA KOD SPAŠAVANJA U BAZU: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -64,3 +61,4 @@ public class KorisnikService {
         korisnikRepository.save(korisnik);
     }
 }
+

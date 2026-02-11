@@ -15,14 +15,11 @@ public class KomentarService {
     public KomentarService(KomentarRepository komentarRepository) {
         this.komentarRepository = komentarRepository;
     }
-
-    // Dodavanje komentara
     public void dodajKomentar(String tekst, NaucniRad rad, Korisnik autor) {
         Komentar komentar = new Komentar();
         komentar.setTekst(tekst);
         komentar.setRad(rad);
         komentar.setAutor(autor);
-        // Datum se postavlja automatski zbog @CreationTimestamp u modelu
 
         komentarRepository.save(komentar);
     }
@@ -39,15 +36,11 @@ public class KomentarService {
         return komentarRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Komentar sa ID " + id + " nije pronađen!"));
     }
-
-    // 2. Izmjeni tekst komentara
     public void izmjeniKomentar(Long id, String noviTekst) {
-        Komentar k = nadjiKomentar(id); // Prvo ga nađemo
-        k.setTekst(noviTekst);          // Promijenimo tekst
-        komentarRepository.save(k);     // Spasimo promjenu
+        Komentar k = nadjiKomentar(id);
+        k.setTekst(noviTekst);
+        komentarRepository.save(k);
     }
-
-    // 3. Obriši komentar
     public void obrisiKomentar(Long id) {
         if (komentarRepository.existsById(id)) {
             komentarRepository.deleteById(id);
@@ -56,3 +49,4 @@ public class KomentarService {
         }
     }
 }
+
